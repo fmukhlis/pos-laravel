@@ -1,0 +1,375 @@
+MODEL & MIGRATION
+
+Note: All column with default value should be defined at the application level. So set it within the model and not inside the migration. 
+Keep this in mind, the fillable attributes is an attribute that directly inputted from user input.
+
+###
+
+Customer
+-id					PRIMARY_KEY
+-name		
+-email					NULLABLE
+-phone					NULLABLE
+-gender		
+-monthly_spending							Default (0)
+-annually_spending							Default (0)
+-all_time_spending							Default (0)
+-store_id				FOREIGN_KEY
+
+Description
+This model is not using soft delete feature.
+The model has 2 relationships:
+1. To Store (many-to-one) <store>.
+We set onDelete action to cascade, meaning if the related Store is deleted then it will delete all Customers associated with it.
+2. To Order (one-to-many) <orders>.
+Please refer to Order section for more details.
+
+Mass assignment fillable properties: email, gender, name, phone.
+
+Timestamps currently not necessary. We don't find this informational data is useful.
+
+###
+
+EmployeeInvite
+-id					PRIMARY_KEY
+-status					ENUM				Default ('Pending')	Available Option : 'Pending', 'Declined', 'Accepted'
+-created_at
+-updated_at
+-user_id				FOREIGN_KEY, NULLABLE
+-store_id				FOREIGN_KEY
+
+Description
+This model is not using soft delete feature.
+The model has 2 relationships:
+1. To User (many-to-one) <invitee>.
+We set onDelete action to set null, meaning if the related User is deleted then it will update its foreign key to null.
+2. To Store (many-to-one) <store>.
+We set onDelete action to cascade, meaning if the related Store is deleted then it will delete all EmployeeInvites associated with it.
+
+Mass assignment fillable properties: status.
+
+Timestamps is used. It's primarily used to inform us when the invitation is created.
+
+###
+
+Order
+-id					PRIMARY_KEY
+-cash_amount		
+-note					NULLABLE
+-order_type				ENUM				Available Option: 'Dine In', 'Take Away'
+-status					ENUM				Available Option: 'Paid', 'Billed'
+-table_number				NULLABLE
+-deleted_at
+-created_at
+-updated_at
+-customer_id				FOREIGN_KEY, NULLABLE
+-payment_method_id			FOREIGN_KEY, NULLABLE
+-store_id				FOREIGN_KEY
+-user_id				FOREIGN_KEY, NULLABLE
+
+Description
+This model is using soft delete feature.
+The model has 5 relationships:
+1. To Customer (many-to-one) <customer>.
+We set onDelete action to set null, meaning if the related Customer is deleted then it will update its foreign key to null.
+2. To PaymentMethod (many-to-one) <paymentMethod>.
+We set onDelete action to set null, meaning if the related PaymentMethod is deleted then it will update its foreign key to null.
+3. To OrderProductVariant (one-to-many) <orderProductVariants> <canceledOrderProductVariants>.
+Please refer to OrderProductVariant section for more details.
+4. To Store (many-to-one) <store>.
+We set onDelete action to cascade, meaning if the related Store is deleted then it will delete all Orders associated with it.
+5. To User (many-to-one) <user>.
+We set onDelete action to set null, meaning if the related User is deleted then it will update its foreign key to null.
+
+Mass assignment fillable properties: cash_amount, note, order_type, status, table_number.
+
+Timestamps is used. It's primarily used to inform us when the order is created.
+
+###
+
+OrderProductVariant 
+-id					PRIMARY_KEY							.
+-is_canceled								Default (false)
+-cancel_reason				NULLABLE
+-order_id				FOREIGN_KEY
+-product_variant_id			FOREIGN_KEY
+-user_id				FOREIGN_KEY, NULLABLE
+-created_at
+-updated_at
+
+Description
+This model is not using built-in soft delete feature but use a similar approach. So basically we will mark the canceled item in is_canceled column. We have to remember this since this is done manually. In the future, maybe we will overwrite the softdeletes trait to make the model automatically exclude the soft deleted items.
+This model is basically a pivot model that is converted to actual eloquent model. This is because we want to add some relationships to this model. 
+The model has 4 relationships:
+1. To Order (many-to-one) <order>.
+We set onDelete action to cascade, meaning if the related Order is deleted then it will delete all OrderProductVariant associated with it.
+2. To ProductVariant (many-to-one) <productVariant>
+We set onDelete action to cascade, meaning if the related ProductVariant is deleted then it will delete all OrderProductVariant associated with it.
+3. To User (many-to-one) <user>.
+We set onDelete action to set null, meaning if the related User is deleted then it will update its foreign key to null.
+4. To ProductModifier (many-to-many) <productModifiers>.
+Please refer to OrderProductVariantProductModifier for more details.
+
+Mass assignment fillable properties: cancel_reason.
+
+Timestamps is used. It's primarily used to inform us when a specific user canceled the product.
+
+###
+
+PaymentMethod
+-id					PRIMARY_KEY
+-name
+-destination
+-store_id				FOREIGN_KEY
+
+Description
+This model is not using soft delete feature.
+The model has 2 relationships:
+1. To Store (many-to-one) <store>
+We set onDelete action to cascade, meaning if the related Store is deleted then it will delete all PaymentMethod associated with it.
+2. To Order (one-to-many) <orders>
+Please refer to Order section for more details.
+
+Mass assignment fillable properties: name, destination.
+
+Timestamps currently not necessary. We don't find this informational data is useful.
+
+###
+
+Permission
+-id					PRIMARY_KEY
+-authorization_code	
+-refund									Default (false)
+-modify_bill								Default (false)
+-store_id				FOREIGN_KEY
+
+Description
+This model is not using soft delete feature.
+The model has 1 relationship:
+1. To Store (many-to-one) <store>.
+We set onDelete action to cascade, meaning if the related Store is deleted then it will delete all Permission associated with it.
+
+Mass assignment fillable properties: authorization_code, modify_bill, refund.
+
+Timestamps currently not necessary. We don't find this informational data is useful.
+
+###
+
+Product
+-id					PRIMARY_KEY
+-name
+-product_category_id			FOREIGN_KEY
+
+Description
+This model is not using soft delete feature.
+The model has 4 relationships:
+1. To ProductCategory (many-to-one) <productCategory>.
+We set onDelete action to cascade, meaning if the related ProductCategory is deleted then it will delete all Product associated with it.
+2. To ProductModifierCategory (one-to-many) <productModifierCategories>.
+Please refer to ProductModifierCategory section for more details.
+3. To ProductOptionCategory (one-to-many) <productOptionCategories>.
+Please refer to ProductOptionCategory section for more details.
+4. To ProductVariant (one-to-many) <productVariants>.
+Please refer to ProductVariant section for more details.
+
+Mass assignment fillable properties: name.
+
+Timestamps currently not necessary. We don't find this informational data is useful.
+
+###
+
+ProductCategory
+-id					PRIMARY_KEY
+-name
+-store_id				FOREIGN_KEY
+
+Description
+This model is not using soft delete feature.
+The model has 2 relationships:
+1. To Products (one-to-many) <products>.
+Please refer to Product section for more details.
+2. To Store (many-to-one) <store>.
+We set onDelete action to cascade, meaning if the related Store is deleted then it will delete all ProductCategory associated with it.
+
+Mass assignment fillable properties: name.
+
+Timestamps currently not necessary. We don't find this informational data is useful.
+
+###
+
+ProductModifier
+-id					PRIMARY_KEY
+-name
+-product_modifier_category_id		FOREIGN_KEY
+
+Description
+This model is not using soft delete feature.
+The model has 2 relationships:
+1. To ProductModifierCategory (many-to-one) <productModifierCategory>.
+We set onDelete action to cascade, meaning if the related ProductModifierCategory is deleted then it will delete all ProductModifier associated with it.
+2. To OrderProductVariant (many-to-many) <orderProductVariants>.
+Please refer to OrderProductVariantProductModifier for more details.
+
+Mass assignment fillable properties: name.
+
+Timestamps currently not necessary. We don't find this informational data is useful.
+
+###
+
+ProductModifierCategory
+-id					PRIMARY_KEY
+-name
+-product_id				FOREIGN_KEY
+
+Description
+This model is not using soft delete feature.
+The model has 2 relationships:
+1. To Product (many-to-one) <product>.
+We set onDelete action to cascade, meaning if the related Product is deleted then it will delete all ProductModifierCategory associated with it.
+2. To ProductModifier (one-to-many) <productModifiers>.
+Please refer to ProductModifier section for more details.
+
+Mass assignment fillable properties: name.
+
+Timestamps currently not necessary. We don't find this informational data is useful.
+
+###
+
+ProductOption
+-id					PRIMARY_KEY
+-name
+-product_option_category_id		FOREIGN_KEY
+
+Description
+This model is not using soft delete feature.
+The model has 2 relationships:
+1. To ProductOptionCategory (many-to-one) <productOptionCategory>.
+We set onDelete action to cascade, meaning if the related ProductOptionCategory is deleted then it will delete all ProductOption associated with it.
+2. To ProductVariant (many-to-many) <productVariants>.
+Please refer to ProductOptionProductVariant section for more details.
+
+Mass assignment fillable properties: name.
+
+Timestamps currently not necessary. We don't find this informational data is useful.
+
+###
+
+ProductOptionCategory
+-id					PRIMARY_KEY
+-name
+-product_id				FOERIGN_KEY
+
+Descripttion
+This model is not using soft delete feature.
+The model has 2 relationships:
+1. To Product (many-to-one) <product>.
+We set onDelete action to cascade, meaning if the related Product is deleted then it will delete all ProductOptionCategory associated with it.
+2. To ProductOption (one-to-many) <productOptions>.
+Please refer to ProductOption section for more details.
+
+Mass assignment fillable properties: name.
+
+Timestamps currently not necessary. We don't find this informational data is useful.
+
+###
+
+ProductVariant
+-id					PRIMARY_KEY
+-price
+-sku					NULLABLE
+-stock									Default (-1)	Value of -1 meaning the stock feature isn't used.
+-product_id				FOREIGN_KEY
+
+Description
+This model is not using soft delete feature.
+The model has 3 relationships:
+1. To Product (many-to-one) <product>.
+We set onDelete action to cascade, meaning if the related Product is deleted then it will delete all ProductVariant associated with it.
+2. To ProductOption (many-to-many) <productOptions>.
+Please refer to ProductOptionProductVariant section for more details.
+3. To OrderProductVariant (one-to-many) <orderProductVariants>.
+Please refer to OrderProductVariant section for more details.
+
+Mass assignment fillable properties: price, sku, stock.
+
+Timestamps currently not necessary. We don't find this informational data is useful.
+
+###
+
+Store
+-id					PRIMARY_KEY
+-name
+-phone					NULLABLE
+-email					NULLABLE
+-address					
+-created_at
+-updated_at
+
+This mode is not using sof delete feature.
+The model has 8 relationships"
+1. To ProductCategory (one-to-many) <productCategories>.
+Please refer to ProductCategory section for more details.
+2. To Customer (one-to-many) <customers>.
+Please refer to Customer section for more details.
+3. To Permission (one-to-many) <permissions>.
+Please refer to Permission section for more details.
+4. To Order (one-to-many) <orders>.
+Please refer to Order section for more details.
+5. To User (one-to-many) <employees>.
+Please refer to User section for more details.
+6 To User (many-to-onne) <owner>.
+We set onDelete action to cascade, meaning if the related User is deleted then it will delete all Store associated with it.
+7. To PaymentMethod (one-to-many) <paymentMethods>.
+Please refer to PaymentMethod section for more details.
+8. To EmployeeInvite (one-to-many) <employeeInvites>.
+Please refer to EmployeeInvite section for more details.
+
+Mass assignment fillable properties: name, phone, email, address.
+
+Timestamps is used. It's primarily used to inform us when a store is created.
+
+###
+
+User
+-id					PRIMARY_KEY
+-full_name
+-role					ENUM				Default ('Free')	Available Option: 'Free', 'Premium'
+-email					
+-phone					NULLABLE
+-email_verified_at			NULLABLE
+-password
+-remember_token				NULLABLE
+-created_at
+-updated_at
+-store_id				FOREIGN_KEY, NULLABLE
+
+Description
+This model is not using soft delete feature.
+The model has 2 relationships:
+1. To Store (one-to-many) <ownedStores>.
+Please refer to Store section for more details.
+2. To Store (many-to-one) <workplaceStore>.
+We set onDelete action to set null, meaning if the related Store is deleted it will update its foreign key to null.
+3. To Order (one-to-many) <order>.
+Please refer to Order section for more details.
+
+Mass assignment fillable properties: full_name, phone, email, address, password.
+
+Timestamps is used. It's primarily used to inform us when a user is created.
+
+###
+
+OrderProductVariantProductModifier (Intermediary Table)
+-id					PRIMARY_KEY
+-order_product_variant_id		FOREIGN_KEY
+-product_modifier_id			FOREIGN_KEY
+
+###
+
+ProductOptionProductVariant (Intermediary Table)
+-id					PRIMARY_KEY
+-order_option_id			FOREIGN_KEY
+-product_variant_id			FOREIGN_KEY
+
+###
+

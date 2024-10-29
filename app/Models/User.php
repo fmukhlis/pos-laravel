@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -21,6 +23,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'full_name',
         'email',
         'password',
+        'phone',
     ];
 
     /**
@@ -44,5 +47,38 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    /**
+     * The model's default values for attributes.
+     * 
+     * @var array
+     */
+    protected $attributes = [
+        'role' => 'Free'
+    ];
+
+    public function canceledProducts(): HasMany
+    {
+        return $this->hasMany(OrderProductVariant::class);
+    }
+
+    public function invitations(): HasMany
+    {
+        return $this->hasMany(EmployeeInvite::class);
+    }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function ownedStores(): HasMany
+    {
+        return $this->hasMany(Store::class);
+    }
+
+    public function workplaceStore(): BelongsTo
+    {
+        return $this->belongsTo(Store::class);
     }
 }
