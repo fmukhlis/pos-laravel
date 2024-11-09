@@ -1,0 +1,143 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Store API",
+        "version": "1.0"
+    },
+    "servers": [{ "url": "http://localhost:8000/api/v1" }],
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        },
+        "schemas": {
+            "AddEmployee": {
+                "type": "object",
+                "required": ["userId"],
+                "properties": {
+                    "userId": { "type": "integer" }
+                }
+            },
+            "SingleEmployee": {
+                "type": "object",
+                "properties": {
+                    "id": { "type": "integer" },
+                    "name": { "type": "string" },
+                    "role": { "type": "string" },
+                    "phone": { "type": "string" },
+                    "email": { "type": "string" }
+                }
+            },
+            "MultipleEmployee": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/SingleEmployee"
+                }
+            }
+        }
+    },
+    "security": [{ "bearerAuth": [] }],
+    "paths": {
+        "/stores/{store_id}/employee": {
+            "get": {
+                "parameters": [
+                    {
+                        "schema": { "type": "integer" },
+                        "name": "store_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return the employee list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "employees": {
+                                                    "$ref": "#/components/schemas/MultipleEmployee"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "parameters": [
+                    {
+                        "schema": { "type": "integer" },
+                        "name": "store_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddEmployee"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Employee added",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": { "type": "string" },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "employee": {
+                                                    "$ref": "#/components/schemas/SingleEmployee"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/stores/{store_id}/employee/{employee_id}": {
+            "delete": {
+                "parameters": [
+                    {
+                        "schema": { "type": "integer" },
+                        "name": "store_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "schema": { "type": "integer" },
+                        "name": "employee_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Employee deleted"
+                    }
+                }
+            }
+        }
+    }
+}

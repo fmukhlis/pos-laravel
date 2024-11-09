@@ -1,12 +1,9 @@
 {
-    "openapi":"3.0.3",
+    "openapi": "3.0.3",
     "info": {
-      "title":"User API",
-      "version":"1.0"
+        "title": "User API",
+        "version": "1.0"
     },
-    "servers": [
-      {"url":"https://localhost:8000/v1"}
-    ],
-    "paths": {
-    }
-  }
+    "servers": [{ "url": "https://localhost:8000/api/v1" }],
+    "paths": {}
+}

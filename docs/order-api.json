@@ -1,0 +1,409 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Order API",
+        "version": "1.0"
+    },
+    "servers": [{ "url": "http://localhost:3000/api/v1" }],
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        },
+        "schemas": {
+            "SingleOrder": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "orderType": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "createdAt": { "type": "string" },
+                    "purchasedProducts": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "integer" },
+                                "name": { "type": "string" },
+                                "price": { "type": "integer" },
+                                "modifiers": {
+                                    "type": "array",
+                                    "items": { "type": "string" }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "SingleOrderDetail": {
+                "type": "object",
+                "properties": {
+                    "cashAmount": { "type": "integer" },
+                    "note": { "type": "string" },
+                    "orderType": { "type": "string" },
+                    "status": { "type": "string" },
+                    "tableNumber": { "type": "string" },
+                    "customer": {
+                        "type": "object",
+                        "properties": {
+                            "name": { "type": "string" },
+                            "phone": { "type": "string" },
+                            "email": { "type": "string" }
+                        }
+                    },
+                    "user": {
+                        "type": "object",
+                        "properties": {
+                            "name": { "type": "string" },
+                            "phone": { "type": "string" },
+                            "email": { "type": "string" }
+                        }
+                    },
+                    "paymentMethod": {
+                        "type": "object",
+                        "properties": {
+                            "name": { "type": "string" },
+                            "destination": { "type": "string" }
+                        }
+                    },
+                    "purchasedProducts": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "integer" },
+                                "baseProduct": { "type": "string" },
+                                "sku": { "type": "string" },
+                                "stock": { "type": "integer" },
+                                "name": { "type": "string" },
+                                "price": { "type": "integer" },
+                                "modifiers": {
+                                    "type": "array",
+                                    "items": { "type": "string" }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "AddOrder": {
+                "type": "object",
+                "required": ["orderType", "status", "purchasedProducts"],
+                "properties": {
+                    "cashAmount": { "type": "integer" },
+                    "note": { "type": "string" },
+                    "orderType": { "type": "string" },
+                    "status": { "type": "string" },
+                    "tableNumber": { "type": "string" },
+                    "customerId": { "type": "integer" },
+                    "paymentMethodId": { "type": "integer" },
+                    "purchasedProducts": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["variantId"],
+                            "properties": {
+                                "variantId": {
+                                    "type": "integer"
+                                },
+                                "modifierIds": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "integer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "UpdateOrder": {
+                "type": "object",
+                "properties": {
+                    "cashAmount": { "type": "integer" },
+                    "note": { "type": "string" },
+                    "orderType": { "type": "string" },
+                    "status": { "type": "string" },
+                    "tableNumber": { "type": "string" },
+                    "customerId": { "type": "integer" },
+                    "paymentMethodId": { "type": "integer" },
+                    "purchasedProducts": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["variantId"],
+                            "properties": {
+                                "variantId": {
+                                    "type": "integer"
+                                },
+                                "modifierIds": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "integer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "SplitOrder": {
+                "type": "object",
+                "properties": {
+                    "productVariantIds": {
+                        "type": "array",
+                        "items": { "type": "integer" }
+                    }
+                }
+            }
+        }
+    },
+    "security": [{ "bearerAuth": [] }],
+    "paths": {
+        "/stores/{store_id}/orders": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "store_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieve all orders of a store",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "orders": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/SingleOrder"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "parameters": [
+                    {
+                        "name": "store_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddOrder"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Order created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "order": {
+                                                    "$ref": "#/components/schemas/SingleOrderDetail"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/stores/{store_id}/orders/{order_id}": {
+            "put": {
+                "parameters": [
+                    {
+                        "name": "store_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    },
+                    {
+                        "name": "order_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateOrder"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Order updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "order": {
+                                                    "$ref": "#/components/schemas/SingleOrderDetail"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "parameters": [
+                    {
+                        "name": "store_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    },
+                    {
+                        "name": "order_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Order deleted"
+                    }
+                }
+            }
+        },
+        "/stores/{store_id}/orders/{order_id}/pay": {
+            "patch": {
+                "parameters": [
+                    {
+                        "name": "store_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    },
+                    {
+                        "name": "order_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order paid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "order": {
+                                                    "$ref": "#/components/schemas/SingleOrderDetail"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/stores/{store_id}/orders/{order_id}/split": {
+            "post": {
+                "parameters": [
+                    {
+                        "name": "store_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    },
+                    {
+                        "name": "order_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SplitOrder"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Order splitted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "order": {
+                                                    "$ref": "#/components/schemas/SingleOrderDetail"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

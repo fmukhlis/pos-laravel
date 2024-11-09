@@ -1,0 +1,235 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Store API",
+        "version": "1.0"
+    },
+    "servers": [{ "url": "http://localhost:8000/api/v1" }],
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        },
+        "schemas": {
+            "CreateStoreSchema": {
+                "type": "object",
+                "required": ["name", "phone", "email", "address"],
+                "properties": {
+                    "name": { "type": "string" },
+                    "phone": { "type": "string" },
+                    "email": { "type": "string" },
+                    "address": { "type": "string" }
+                }
+            },
+            "UpdateStoreSchema": {
+                "type": "object",
+                "properties": {
+                    "name": { "type": "string" },
+                    "phone": { "type": "string" },
+                    "email": { "type": "string" },
+                    "address": { "type": "string" }
+                }
+            },
+            "SingleStoreSchema": {
+                "type": "object",
+                "properties": {
+                    "id": { "type": "integer" },
+                    "name": { "type": "string" },
+                    "phone": { "type": "string" },
+                    "email": { "type": "string" },
+                    "address": { "type": "string" }
+                }
+            },
+            "MultipleStoreSchema": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SingleStoreSchema"
+                        }
+                    }
+                }
+            }
+        },
+        "examples": {
+            "CreateStoreExample": {
+                "value": {
+                    "name": "Cafe Coffee Boss",
+                    "phone": "081234567890",
+                    "email": "ccbcirebon@gmail.com",
+                    "address": "Jl. Raya Kresek KM 11"
+                }
+            },
+            "UpdateStoreExample": {
+                "value": {
+                    "phone": "081234567890",
+                    "email": "ccbcirebon@gmail.com"
+                }
+            },
+            "SingleStoreExample": {
+                "value": {
+                    "data": {
+                        "id": 1,
+                        "name": "Cafe Coffee Boss",
+                        "email": "ccbcirebon@gmail.com",
+                        "phone": "081234567890",
+                        "address": "Jl. Raya Kresek KM 11",
+                        "createdAt": "2024-10-29T10:59:05.000000Z"
+                    }
+                }
+            },
+            "MultipleStoreExample": {
+                "value": {
+                    "data": [
+                        {
+                            "id": 1,
+                            "name": "Cafe Coffee Boss",
+                            "email": "ccbcirebon@gmail.com",
+                            "phone": "081234567890",
+                            "address": "Jl. Raya Kresek KM 11",
+                            "createdAt": "2024-10-29T10:59:05.000000Z"
+                        },
+                        {
+                            "id": 2,
+                            "name": "Toko Serba Serbi",
+                            "email": "tsstangerang@gmail.com",
+                            "phone": "081234567890",
+                            "address": "Jl. Raya Kresek KM 12",
+                            "createdAt": "2024-12-29T10:36:05.000000Z"
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "security": [{ "bearerAuth": [] }],
+    "paths": {
+        "/stores": {
+            "post": {
+                "summary": "Create a new store",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateStoreSchema"
+                            },
+                            "examples": {
+                                "StoreRequestExample": {
+                                    "$ref": "#/components/examples/CreateStoreExample"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Store created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SingleStoreSchema"
+                                },
+                                "examples": {
+                                    "Example 1": {
+                                        "$ref": "#/components/examples/SingleStoreExample"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/stores/{store_id}": {
+            "get": {
+                "summary": "Get a store by ID",
+                "parameters": [
+                    {
+                        "schema": { "type": "integer" },
+                        "name": "store_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A single store",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SingleStoreSchema"
+                                },
+                                "examples": {
+                                    "Example 1": {
+                                        "$ref": "#/components/examples/SingleStoreExample"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update store by ID",
+                "parameters": [
+                    {
+                        "schema": { "type": "integer" },
+                        "name": "store_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateStoreSchema"
+                            },
+                            "examples": {
+                                "Example 1": {
+                                    "$ref": "#/components/examples/UpdateStoreExample"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Store updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SingleStoreSchema"
+                                },
+                                "examples": {
+                                    "Example 1": {
+                                        "$ref": "#/components/examples/SingleStoreExample"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete store by ID",
+                "parameters": [
+                    {
+                        "schema": { "type": "integer" },
+                        "name": "store_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Store deleted"
+                    }
+                }
+            }
+        }
+    }
+}

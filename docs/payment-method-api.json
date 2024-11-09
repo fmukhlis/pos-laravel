@@ -1,0 +1,181 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Payment Method API",
+        "version": "1.0"
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        },
+        "schemas": {
+            "SinglePaymentMethod": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "destination": {
+                        "type": "string"
+                    }
+                }
+            },
+            "MultiplePaymentMethod": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/SinglePaymentMethod"
+                }
+            },
+            "AddPaymentMethod": {
+                "type": "object",
+                "required": ["name", "destination"],
+                "properties": {
+                    "name": { "type": "string" },
+                    "destination": { "type": "string" }
+                }
+            },
+            "UpdatePaymentMethod": {
+                "type": "object",
+                "properties": {
+                    "name": { "type": "string" },
+                    "destination": { "type": "string" }
+                }
+            }
+        }
+    },
+    "security": [{ "bearerAuth": [] }],
+    "servers": [{ "url": "http://localhost:3000/api/v1" }],
+    "paths": {
+        "/stores/{store_id}/payment-methods": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "store_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieve payment methods available on a specific store",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "paymentMethods": {
+                                                    "$ref": "#/components/schemas/MultiplePaymentMethod"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "parameters": [
+                    {
+                        "name": "store_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddPaymentMethod"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Payment method created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SinglePaymentMethod"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/stores/{store_id}/payment-methods/{payment_method_id}": {
+            "put": {
+                "parameters": [
+                    {
+                        "name": "store_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    },
+                    {
+                        "name": "payment_method_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdatePaymentMethod"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Payment method created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SinglePaymentMethod"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "parameters": [
+                    {
+                        "name": "store_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    },
+                    {
+                        "name": "payment_method_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Payment method deleted"
+                    }
+                }
+            }
+        }
+    }
+}

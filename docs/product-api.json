@@ -1,0 +1,400 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Product API",
+        "version": "1.0"
+    },
+    "servers": [{ "url": "http://localhost:3000/api/v1" }],
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        },
+        "schemas": {
+            "SingleProduct": {
+                "type": "object",
+                "properties": {
+                    "id": { "type": "integer" },
+                    "category": { "type": "string" },
+                    "name": { "type": "string" },
+                    "optionCategories": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "integer" },
+                                "name": { "type": "string" },
+                                "options": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": { "type": "integer" },
+                                            "name": { "type": "string" }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "modifierCategories": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "integer" },
+                                "name": { "type": "string" },
+                                "modifiers": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": { "type": "string" },
+                                            "name": { "type": "string" }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "variants": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": { "type": "integer" },
+                                "sku": { "type": "string" },
+                                "stock": { "type": "integer" },
+                                "price": { "type": "integer" },
+                                "forOptions": {
+                                    "type": "array",
+                                    "items": { "type": "string" }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "MultipleProduct": {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/SingleProduct" }
+            },
+            "AddProduct": {
+                "type": "object",
+                "required": ["name", "variants"],
+                "properties": {
+                    "category": { "type": "integer" },
+                    "name": { "type": "string" },
+                    "optionCategories": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["name", "options"],
+                            "properties": {
+                                "name": { "type": "string" },
+                                "options": {
+                                    "type": "array",
+                                    "items": { "type": "string" }
+                                }
+                            }
+                        }
+                    },
+                    "modifierCategories": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["name", "modifiers"],
+                            "properties": {
+                                "name": { "type": "string" },
+                                "modifiers": {
+                                    "type": "array",
+                                    "items": { "type": "string" }
+                                }
+                            }
+                        }
+                    },
+                    "variants": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["price"],
+                            "properties": {
+                                "sku": { "type": "string" },
+                                "price": { "type": "integer" },
+                                "stock": { "type": "integer" },
+                                "forOptions": {
+                                    "type": "array",
+                                    "items": { "type": "string" }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "UpdateProduct": {
+                "type": "object",
+                "properties": {
+                    "category": { "type": "integer" },
+                    "name": { "type": "string" },
+                    "optionCategories": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["name", "options"],
+                            "properties": {
+                                "name": { "type": "string" },
+                                "options": {
+                                    "type": "array",
+                                    "items": { "type": "string" }
+                                }
+                            }
+                        }
+                    },
+                    "modifierCategories": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["name", "modifiers"],
+                            "properties": {
+                                "name": { "type": "string" },
+                                "modifiers": {
+                                    "type": "array",
+                                    "items": { "type": "string" }
+                                }
+                            }
+                        }
+                    },
+                    "variants": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "sku": { "type": "string" },
+                                "price": { "type": "integer" },
+                                "stock": { "type": "integer" },
+                                "forOptions": {
+                                    "type": "array",
+                                    "items": { "type": "string" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "security": [{ "bearerAuth": [] }],
+    "paths": {
+        "/stores/{store_id}/products": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "store_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieve all products on a store",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "products": {
+                                                    "$ref": "#/components/schemas/MultipleProduct"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "parameters": [
+                    {
+                        "name": "store_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddProduct"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Product created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "product": {
+                                                    "$ref": "#/components/schemas/SingleProduct"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/stores/{store_id}/products/{product_id}": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "store_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    },
+                    {
+                        "name": "product_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrive a product",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "product": {
+                                                    "$ref": "#/components/schemas/SingleProduct"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "parameters": [
+                    {
+                        "name": "store_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    },
+                    {
+                        "name": "product_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateProduct"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Product updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "product": {
+                                                    "$ref": "#/components/schemas/SingleProduct"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "parameters": [
+                    {
+                        "name": "store_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    },
+                    {
+                        "name": "product_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Product deleted"
+                    }
+                }
+            }
+        },
+        "/stores/{store_id}/product-categories/{product_category_id}/products": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Retrieve all products based on specific categories",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "products": {
+                                                    "$ref": "#/components/schemas/MultipleProduct"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
