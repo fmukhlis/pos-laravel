@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Resources\V1;
+namespace App\Http\Resources;
 
+use App\Http\Resources\V1\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Log;
 
-class User extends JsonResource
+class Store extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,9 +17,12 @@ class User extends JsonResource
     {
         return [
             'id' => $this->id,
-            'fullName' => $this->full_name,
+            'name' => $this->name,
+            'phone' => $this->phone,
             'email' => $this->email,
-            'emailVerifiedAt' => $this->email_verified_at,
+            'address' => $this->address,
+            'createdAt' => $this->created_at,
+            'owner' => User::make($this->whenLoaded('owner'))
         ];
     }
 }

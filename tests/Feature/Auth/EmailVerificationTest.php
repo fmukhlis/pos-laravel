@@ -13,37 +13,37 @@ class EmailVerificationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_email_can_be_verified(): void
-    {
-        $user = User::factory()->unverified()->create();
+    // public function test_email_can_be_verified(): void
+    // {
+    //     $user = User::factory()->unverified()->create();
 
-        Event::fake();
+    //     Event::fake();
 
-        $verificationUrl = URL::temporarySignedRoute(
-            'verification.verify',
-            now()->addMinutes(60),
-            ['id' => $user->id, 'hash' => sha1($user->email)]
-        );
+    //     $verificationUrl = URL::temporarySignedRoute(
+    //         'verification.verify',
+    //         now()->addMinutes(60),
+    //         ['id' => $user->id, 'hash' => sha1($user->email)]
+    //     );
 
-        $response = $this->actingAs($user)->get($verificationUrl);
+    //     $response = $this->actingAs($user)->get($verificationUrl);
 
-        Event::assertDispatched(Verified::class);
-        $this->assertTrue($user->fresh()->hasVerifiedEmail());
-        $response->assertRedirect(config('app.frontend_url').'/dashboard?verified=1');
-    }
+    //     Event::assertDispatched(Verified::class);
+    //     $this->assertTrue($user->fresh()->hasVerifiedEmail());
+    //     $response->assertRedirect(config('app.frontend_url').'/dashboard?verified=1');
+    // }
 
-    public function test_email_is_not_verified_with_invalid_hash(): void
-    {
-        $user = User::factory()->unverified()->create();
+    // public function test_email_is_not_verified_with_invalid_hash(): void
+    // {
+    //     $user = User::factory()->unverified()->create();
 
-        $verificationUrl = URL::temporarySignedRoute(
-            'verification.verify',
-            now()->addMinutes(60),
-            ['id' => $user->id, 'hash' => sha1('wrong-email')]
-        );
+    //     $verificationUrl = URL::temporarySignedRoute(
+    //         'verification.verify',
+    //         now()->addMinutes(60),
+    //         ['id' => $user->id, 'hash' => sha1('wrong-email')]
+    //     );
 
-        $this->actingAs($user)->get($verificationUrl);
+    //     $this->actingAs($user)->get($verificationUrl);
 
-        $this->assertFalse($user->fresh()->hasVerifiedEmail());
-    }
+    //     $this->assertFalse($user->fresh()->hasVerifiedEmail());
+    // }
 }

@@ -28,12 +28,6 @@ class AuthenticatedSessionController extends Controller
 
         $user = $request->user();
 
-        $user->tokens->each(function ($value) {
-            if (in_array('basic:full-access', $value->abilities)) {
-                $value->delete();
-            }
-        });
-
         $token = $user->createToken($request->device_name, ['basic:full-access'])->plainTextToken;
 
         return response()->json(['token' => $token]);
@@ -44,9 +38,9 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): JsonResponse
     {
-        $isDeletionSuccess = $request->user()->currentAccessToken()->delete();
+        $isTokenDeletionSuccess = $request->user()->currentAccessToken()->delete();
 
-        if (!$isDeletionSuccess) {
+        if (!$isTokenDeletionSuccess) {
             return response()->json(['message' => 'Error when logging out user'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
