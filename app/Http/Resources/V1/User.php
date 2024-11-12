@@ -19,7 +19,7 @@ class User extends JsonResource
             'id' => $this->id,
             'fullName' => $this->full_name,
             'email' => $this->email,
-            'emailVerifiedAt' => $this->email_verified_at,
+            'emailVerifiedAt' => $this->when($request->has('include_email_verified_at'), $this->email_verified_at),
         ];
     }
 }

@@ -76,15 +76,26 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/components/schemas/SingleStore"
+                                            "allOf": [
+                                                {
+                                                    "$ref": "#/components/schemas/SingleStore"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "owner": {
+                                                            "$ref": "#/components/schemas/SingleUser"
+                                                        }
+                                                    }
+                                                }
+                                            ]
                                         }
                                     }
                                 }
                             }
                         }
                     },
-                    "401": { "description": "Unauthorized" },
-                    "422": { "description": "Validation exception" }
+                    "401": { "description": "Unauthorized" }
                 }
             },
             "put": {
@@ -147,8 +158,7 @@
                 "responses": {
                     "204": { "description": "Successful operation" },
                     "401": { "description": "Unauthorized" },
-                    "403": { "description": "Forbidden" },
-                    "422": { "description": "Validation exception" }
+                    "403": { "description": "Forbidden" }
                 }
             }
         }
@@ -211,7 +221,22 @@
                     "name": { "type": "string", "example": "Coffee Cafe Boss" },
                     "phone": { "type": "string", "example": "081234567890" },
                     "email": { "type": "string", "example": "ccb@example.com" },
-                    "address": { "type": "string", "example": "Cirebon" }
+                    "address": { "type": "string", "example": "Cirebon" },
+                    "createdAt": {
+                        "type": "string",
+                        "example": "2024-11-11T19:04:27.000000Z"
+                    }
+                }
+            },
+            "SingleUser": {
+                "type": "object",
+                "properties": {
+                    "id": { "type": "integer", "example": 1 },
+                    "fullName": { "type": "string", "example": "John Doe" },
+                    "email": {
+                        "type": "string",
+                        "example": "johndoe@example.com"
+                    }
                 }
             }
         }

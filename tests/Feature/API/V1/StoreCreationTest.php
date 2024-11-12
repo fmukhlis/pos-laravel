@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\API\V1;
+namespace Tests\Feature\API\V1\Store;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\User;
@@ -10,7 +10,7 @@ class StoreCreationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_premium_users_can_create_store(): void
+    public function test_premium_users_can_create_a_store(): void
     {
         $user = User::factory()->premium()->create();
 
@@ -32,7 +32,7 @@ class StoreCreationTest extends TestCase
         $response->assertStatus(201);
     }
 
-    public function test_guest_users_can_not_create_a_store(): void
+    public function test_guests_can_not_create_a_store(): void
     {
         $response = $this->postJson(
             '/api/v1/stores',
@@ -47,7 +47,7 @@ class StoreCreationTest extends TestCase
         $response->assertStatus(401);
     }
 
-    public function test_free_users_can_not_create_store(): void
+    public function test_free_users_can_not_create_a_store(): void
     {
         $user = User::factory()->create();
 
