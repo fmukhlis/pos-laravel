@@ -17,14 +17,14 @@ class CreateStoreController extends Controller
         $validated = $request->validate([
             'name' => ['string', 'required', 'max:255'],
             'phone' => ['string', 'required', 'max:20'],
-            'email' => ['string', 'required', 'lowercase', 'max:255', 'email'],
-            'address' => ['string', 'required', 'max:255']
+            'email' => ['string', 'required', 'lowercase', 'email', 'max:255'],
+            'address' => ['string', 'required', 'max:512']
         ]);
 
         $store = new Store($validated);
 
         $request->user()->ownedStores()->save($store);
 
-        return new \App\Http\Resources\Store($store);
+        return new \App\Http\Resources\V1\Store($store);
     }
 }

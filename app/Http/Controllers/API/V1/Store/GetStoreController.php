@@ -10,6 +10,6 @@ class GetStoreController extends Controller
 {
     public function __invoke(Request $request, Store $store)
     {
-        return new \App\Http\Resources\Store($store->load('owner'));
+        return new \App\Http\Resources\V1\Store($store->load('owner'));
     }
 }

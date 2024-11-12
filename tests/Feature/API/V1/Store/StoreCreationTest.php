@@ -29,7 +29,17 @@ class StoreCreationTest extends TestCase
             ]
         );
 
-        $response->assertStatus(201);
+        $response->assertStatus(201)
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'phone',
+                    'email',
+                    'address',
+                    'createdAt',
+                ]
+            ]);
     }
 
     public function test_guests_can_not_create_a_store(): void
