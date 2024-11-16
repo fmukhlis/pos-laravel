@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\V1\Store\CreateStoreController;
 use App\Http\Controllers\API\V1\Store\GetStoreController;
 use App\Http\Controllers\API\V1\Store\ManageStoreController;
+use App\Http\Controllers\API\V1\Store\GetEmployeeController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
@@ -10,4 +11,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/v1/stores/{store}', GetStoreController::class);
     Route::put('/v1/stores/{store}', [ManageStoreController::class, 'update']);
     Route::delete('/v1/stores/{store}', [ManageStoreController::class, 'destroy']);
+
+    Route::get('/v1/stores/{store}/employees', GetEmployeeController::class);
 });

@@ -37,7 +37,6 @@ class StoreRetrievalTest extends TestCase
                     'owner' => [
                         'id',
                         'fullName',
-                        'email',
                     ]
                 ]
             ]);

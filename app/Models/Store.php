@@ -48,7 +48,7 @@ class Store extends Model
         return $this->hasMany(ProductCategory::class);
     }
 
-    public function employee(): HasMany
+    public function employees(): HasMany
     {
         return $this->hasMany(Employee::class);
     }

@@ -15,11 +15,20 @@ class User extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
+        $data = [
             'id' => $this->id,
             'fullName' => $this->full_name,
-            'email' => $this->email,
-            'emailVerifiedAt' => $this->when($request->has('include_email_verified_at'), $this->email_verified_at),
         ];
+
+        if ($request->is('/api/v1/settings/my-profile')) {
+            $data = array_merge($data, [
+                'role' => $this->role,
+                'email' => $this->email,
+                'emailVerifiedAt' => $this->when($request->has('include_email_verified_at'), $this->email_verified_at),
+                'phone' => $this->phone,
+            ]);
+        }
+
+        return $data;
     }
 }
