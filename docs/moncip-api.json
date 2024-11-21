@@ -16,7 +16,8 @@
     "security": [{ "bearerAuth": [] }],
     "tags": [
         { "name": "Store", "description": "Operations about store" },
-        { "name": "Employee", "description": "Operations about employee" }
+        { "name": "Employee", "description": "Operations about employee" },
+        { "name": "Customer", "description": "Operations about customer" }
     ],
     "paths": {
         "/stores": {
@@ -280,6 +281,205 @@
                     "403": { "description": "Forbidden" }
                 }
             }
+        },
+        "/stores/{storeId}/customers": {
+            "get": {
+                "tags": ["Customer"],
+                "summary": "Get all customers",
+                "description": "Return all customers of a store",
+                "parameters": [
+                    {
+                        "name": "storeId",
+                        "in": "path",
+                        "description": "ID of a store",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/SingleCustomer"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": { "description": "Unauthorized" }
+                }
+            },
+            "post": {
+                "tags": ["Customer"],
+                "summary": "Add customer",
+                "description": "Create a new customer",
+                "parameters": [
+                    {
+                        "name": "storeId",
+                        "in": "path",
+                        "description": "ID of a store",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateCustomer"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SingleCustomer"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": { "description": "Unauthorized" },
+                    "403": { "description": "Forbidden" },
+                    "422": { "description": "Validation exception" }
+                }
+            }
+        },
+        "/stores/{storeId}/customers/{customerId}": {
+            "get": {
+                "tags": ["Customer"],
+                "summary": "Get single customer",
+                "description": "Return single customer",
+                "parameters": [
+                    {
+                        "name": "storeId",
+                        "in": "path",
+                        "description": "ID of a store",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    },
+                    {
+                        "name": "customerId",
+                        "in": "path",
+                        "description": "ID of a customer",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SingleCustomer"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": { "description": "Unauthorized" }
+                }
+            },
+            "put": {
+                "tags": ["Customer"],
+                "summary": "Update customer",
+                "description": "Update a customer",
+                "parameters": [
+                    {
+                        "name": "storeId",
+                        "in": "path",
+                        "description": "ID of a store",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    },
+                    {
+                        "name": "customerId",
+                        "in": "path",
+                        "description": "ID of a customer",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateCustomer"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/SingleCustomer"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": { "description": "Unauthorized" },
+                    "403": { "description": "Forbidden" },
+                    "422": { "description": "Validation exception" }
+                }
+            },
+            "delete": {
+                "tags": ["Customer"],
+                "summary": "Delete customer",
+                "description": "Remove a customer from a store",
+                "parameters": [
+                    {
+                        "name": "storeId",
+                        "in": "path",
+                        "description": "ID of a store",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    },
+                    {
+                        "name": "customerId",
+                        "in": "path",
+                        "description": "ID of a customer",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "responses": {
+                    "204": { "description": "Successful operation" },
+                    "401": { "description": "Unauthorized" },
+                    "403": { "description": "Forbidden" }
+                }
+            }
         }
     },
     "components": {
@@ -404,6 +604,86 @@
                         }
                     }
                 ]
+            },
+            "CreateCustomer": {
+                "type": "object",
+                "required": ["name", "phone", "email", "gender"],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Alice"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "6281234567890"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "alice@example.com"
+                    },
+                    "gender": {
+                        "type": "string",
+                        "example": "Female"
+                    }
+                }
+            },
+            "UpdateCustomer": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Alice"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "6281234567890"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "alice@example.com"
+                    },
+                    "gender": {
+                        "type": "string",
+                        "example": "Female"
+                    }
+                }
+            },
+            "SingleCustomer": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Alice"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "6281234567890"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "alice@example.com"
+                    },
+                    "gender": {
+                        "type": "string",
+                        "example": "Female"
+                    },
+                    "monthlySpending": {
+                        "type": "integer",
+                        "example": 0
+                    },
+                    "annuallySpending": {
+                        "type": "integer",
+                        "example": 0
+                    },
+                    "allTimeSpending": {
+                        "type": "integer",
+                        "example": 0
+                    }
+                }
             }
         }
     }
