@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API\V1\Store;
+namespace App\Http\Controllers\API\V1\Employee;
 
 use App\Http\Controllers\Controller;
 use App\Models\Store;

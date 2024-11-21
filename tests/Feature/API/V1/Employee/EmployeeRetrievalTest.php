@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\API\V1\Store;
+namespace Tests\Feature\API\V1\Employee;
 
 use App\Models\Employee;
 use App\Models\Store;
@@ -11,11 +11,12 @@ use Tests\TestCase;
 
 class EmployeeRetrievalTest extends TestCase
 {
-    // use RefreshDatabase;
+    use RefreshDatabase;
 
     public function test_users_can_retrieve_all_employees(): void
     {
         $owner = User::factory()->premium()->create();
+
         $store = Store::factory()
             ->for($owner, 'owner')
             ->create();
@@ -29,7 +30,8 @@ class EmployeeRetrievalTest extends TestCase
             }
         );
 
-        $user = User::factory()->create(['email' => 'admin@example.com', 'password' => '12345678']);
+        $user = User::factory()->create();
+
         $token = $user->createToken('Device A', ['basic:full-access'])->plainTextToken;
 
         $response = $this->getJson(
@@ -42,8 +44,9 @@ class EmployeeRetrievalTest extends TestCase
                 'data' => [
                     '*' => [
                         'id',
-                        'fullName',
-                        'status'
+                        'status',
+                        'userName',
+                        'storeName'
                     ]
                 ]
             ]);
@@ -52,6 +55,7 @@ class EmployeeRetrievalTest extends TestCase
     public function test_guests_can_not_retrieve_any_employees(): void
     {
         $owner = User::factory()->premium()->create();
+
         $store = Store::factory()->for($owner, 'owner')->create();
 
         $response = $this->getJson('/api/v1/stores/' . $store->id . '/employees');

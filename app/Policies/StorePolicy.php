@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\EmployeeInvite;
 use App\Models\Store;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -35,5 +36,10 @@ class StorePolicy
         return $user->id === $store->user_id
             ? Response::allow()
             : Response::deny('You have no right to update this store.');
+    }
+
+    public function join(User $user, EmployeeInvite $employeeInvite)
+    {
+        return $user->id === $employeeInvite->invitee->id;
     }
 }

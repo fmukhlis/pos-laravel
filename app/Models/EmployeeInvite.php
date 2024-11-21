@@ -10,7 +10,9 @@ class EmployeeInvite extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['status'];
+    protected $fillable = [
+        'status'
+    ];
 
     protected $attributes = [
         'status' => 'Pending'
@@ -18,7 +20,7 @@ class EmployeeInvite extends Model
 
     public function invitee(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function store(): BelongsTo
