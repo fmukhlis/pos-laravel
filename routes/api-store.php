@@ -35,4 +35,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::post('/v1/stores/{store}/customers', [ManageCustomerController::class, 'create']);
 
     Route::get('/v1/stores/{store}/customers/{customer}', [GetCustomerController::class, 'get']);
+    Route::put('/v1/stores/{store}/customers/{customer}', [ManageCustomerController::class, 'update']);
+    Route::delete('/v1/stores/{store}/customers/{customer}', [ManageCustomerController::class, 'delete']);
 });

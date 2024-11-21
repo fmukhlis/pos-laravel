@@ -25,4 +25,29 @@ class ManageCustomerController extends Controller
 
         return new \App\Http\Resources\V1\Customer($customer);
     }
+
+    public function update(Request $request, Store $store, Customer $customer)
+    {
+        Gate::authorize('update', $customer);
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'max:20'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
+            'gender' => ['required', 'in:Male,Female'],
+        ]);
+
+        $customer->update($validated);
+
+        return new \App\Http\Resources\V1\Customer($customer);
+    }
+
+    public function delete(Request $request, Store $store, Customer $customer)
+    {
+        Gate::authorize('delete', $customer);
+
+        $customer->delete();
+
+        return response()->json([], 204);
+    }
 }
