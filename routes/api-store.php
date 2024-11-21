@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\V1\Customer\GetCustomerController;
+use App\Http\Controllers\API\V1\Customer\ManageCustomerController;
 use App\Http\Controllers\API\V1\Employee\GetEmployeeController;
 use App\Http\Controllers\API\V1\Employee\GetEmployeeInvitationController;
 use App\Http\Controllers\API\V1\Employee\InviteEmployeeController;
@@ -30,6 +31,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::patch('/v1/stores/{store}/employees/{employee}/make-active', [ManageEmployeeController::class, 'makeActive']);
     Route::patch('/v1/stores/{store}/employees/{employee}/make-inactive', [ManageEmployeeController::class, 'makeInactive']);
 
-    Route::get('/v1/stores/{storeId}/customers', [GetCustomerController::class, 'getAll']);
+    Route::get('/v1/stores/{store}/customers', [GetCustomerController::class, 'getAll']);
+    Route::post('/v1/stores/{store}/customers', [ManageCustomerController::class, 'create']);
+
     Route::get('/v1/stores/{store}/customers/{customer}', [GetCustomerController::class, 'get']);
 });
