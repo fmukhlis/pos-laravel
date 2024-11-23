@@ -6,7 +6,6 @@ use App\Http\Controllers\API\V1\Auth\NewPasswordController;
 use App\Http\Controllers\API\V1\Auth\PasswordResetLinkController;
 use App\Http\Controllers\API\V1\Auth\RegisteredUserController;
 use App\Http\Controllers\API\V1\Auth\VerifyEmailController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/v1/register', [RegisteredUserController::class, 'store']);
