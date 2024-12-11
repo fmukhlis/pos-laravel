@@ -21,9 +21,9 @@ class CreateStoreController extends Controller
             'address' => ['string', 'required', 'max:512']
         ]);
 
-        $store = new Store($validated);
+        $store = $request->user()->ownedStores()->create($validated);
 
-        $request->user()->ownedStores()->save($store);
+        $store->productCategories()->create(['name' => 'Uncategorized']);
 
         return new \App\Http\Resources\V1\Store($store);
     }

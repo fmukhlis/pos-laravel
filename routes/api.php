@@ -17,4 +17,7 @@ require __DIR__ . '/api-employee-invitation.php';
 require __DIR__ . '/api-employee.php';
 require __DIR__ . '/api-payment-method.php';
 require __DIR__ . '/api-permission.php';
+require __DIR__ . '/api-product-category.php';
+require __DIR__ . '/api-product.php';
 require __DIR__ . '/api-store.php';
+require __DIR__ . '/api-order.php';

@@ -42,6 +42,10 @@ return new class extends Migration
         });
         Schema::table('products', function (Blueprint $table) {
             $table->foreignId('product_category_id')
+                ->nullable()
+                ->constrained()
+                ->onDelete('set null');
+            $table->foreignId('store_id')
                 ->constrained()
                 ->onDelete('cascade');
         });

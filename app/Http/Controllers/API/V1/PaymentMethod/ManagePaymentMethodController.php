@@ -7,6 +7,7 @@ use App\Models\PaymentMethod;
 use App\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\ValidationException;
 
 class ManagePaymentMethodController extends Controller
 {
@@ -19,7 +20,21 @@ class ManagePaymentMethodController extends Controller
             'destination' => ['required', 'string', 'max:255']
         ]);
 
-        $paymentMethod = $store->paymentMethods()->create($validated);
+        $paymentMethod = $store->paymentMethods()
+            ->where('name', $validated['name'])
+            ->where('destination', $validated['destination'])
+            ->first();
+
+        if ($paymentMethod) {
+            throw ValidationException::withMessages([
+                'name' => 'This payment method is already exists',
+                'destination' => 'This payment method is already exists'
+            ]);
+        } else {
+            $paymentMethod = $store
+                ->paymentMethods()
+                ->create($validated);
+        }
 
         return new \App\http\Resources\V1\PaymentMethod($paymentMethod);
     }
@@ -29,11 +44,25 @@ class ManagePaymentMethodController extends Controller
         Gate::authorize('update', $paymentMethod);
 
         $validated = $request->validate([
-            'name' => ['string', 'max:255'],
-            'destination' => ['string', 'max:255']
+            'name' => ['required', 'string', 'max:255'],
+            'destination' => ['required', 'string', 'max:255']
         ]);
 
-        $paymentMethod->update($validated);
+        $newPaymentMethod = $store->paymentMethods()
+            ->where('name', $validated['name'])
+            ->where('destination', $validated['destination'])
+            ->first();
+
+        if ($newPaymentMethod && $newPaymentMethod->is($paymentMethod)) {
+            throw ValidationException::withMessages([
+                'name' => 'This payment method is already exists',
+                'destination' => 'This payment method is already exists'
+            ]);
+        } else {
+            $paymentMethod->name = $validated['name'];
+            $paymentMethod->destination = $validated['destination'];
+            $paymentMethod->save();
+        }
 
         return new \App\http\Resources\V1\PaymentMethod($paymentMethod);
     }

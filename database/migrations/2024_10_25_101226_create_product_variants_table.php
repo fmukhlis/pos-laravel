@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('price');
             $table->integer('stock');
             $table->string('sku')->nullable();
+            $table->enum('status', ['Active', 'Inactive']);
         });
     }
 

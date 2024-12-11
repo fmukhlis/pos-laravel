@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('product_option_categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->enum('status', ['Active', 'Inactive']);
         });
     }
 

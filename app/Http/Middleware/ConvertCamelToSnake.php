@@ -16,12 +16,21 @@ class ConvertCamelToSnake
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $data = collect($request->all())->mapWithKeys(function ($value, $key) {
-            return [Str::snake($key) => $value];
-        })->toArray();
+        $data = $this->snakeCase($request->all());
 
         $request->replace($data);
 
         return $next($request);
+    }
+
+    private function snakeCase(array $data): array
+    {
+        return collect($data)->mapWithKeys(function ($value, $key) {
+            if (is_array($value)) {
+                $value = $this->snakeCase($value);
+            }
+
+            return [Str::snake($key) => $value];
+        })->toArray();
     }
 }

@@ -11,7 +11,11 @@ class ProductModifier extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'status'];
+
+    protected $attributes = [
+        'status' => 'Active'
+    ];
 
     public $timestamps = false;
 

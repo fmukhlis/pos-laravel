@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('product_modifiers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->enum('status', ['Active', 'Inactive']);
         });
     }
 

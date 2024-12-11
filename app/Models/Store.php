@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Store extends Model
 {
@@ -46,6 +47,16 @@ class Store extends Model
     public function productCategories(): HasMany
     {
         return $this->hasMany(ProductCategory::class);
+    }
+
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    public function productVariants(): HasManyThrough
+    {
+        return $this->hasManyThrough(ProductVariant::class, Product::class);
     }
 
     public function employees(): HasMany

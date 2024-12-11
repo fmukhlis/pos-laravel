@@ -12,7 +12,7 @@ use Tests\TestCase;
 
 class EmployeeInvitationManagementTest extends TestCase
 {
-    // use RefreshDatabase;
+    use RefreshDatabase;
 
     public function test_store_owners_can_send_employee_invitations(): void
     {

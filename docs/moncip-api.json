@@ -26,7 +26,9 @@
         {
             "name": "Product Category",
             "description": "Operations about product category"
-        }
+        },
+        { "name": "Product", "description": "Operations about product" },
+        { "name": "Order", "description": "Operations about order" }
     ],
     "paths": {
         "/stores": {
@@ -53,7 +55,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/components/schemas/SingleStore"
+                                            "$ref": "#/components/schemas/Store"
                                         }
                                     }
                                 }
@@ -91,13 +93,13 @@
                                         "data": {
                                             "allOf": [
                                                 {
-                                                    "$ref": "#/components/schemas/SingleStore"
+                                                    "$ref": "#/components/schemas/Store"
                                                 },
                                                 {
                                                     "type": "object",
                                                     "properties": {
                                                         "owner": {
-                                                            "$ref": "#/components/schemas/SingleUser"
+                                                            "$ref": "#/components/schemas/User"
                                                         }
                                                     }
                                                 }
@@ -143,7 +145,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/components/schemas/SingleStore"
+                                            "$ref": "#/components/schemas/Store"
                                         }
                                     }
                                 }
@@ -200,7 +202,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/SingleEmployee"
+                                                "$ref": "#/components/schemas/Employee"
                                             }
                                         }
                                     }
@@ -249,7 +251,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/SingleEmployee"
+                                                "$ref": "#/components/schemas/Employee"
                                             }
                                         }
                                     }
@@ -316,7 +318,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/SingleCustomer"
+                                                "$ref": "#/components/schemas/Customer"
                                             }
                                         }
                                     }
@@ -359,7 +361,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/components/schemas/SingleCustomer"
+                                            "$ref": "#/components/schemas/Customer"
                                         }
                                     }
                                 }
@@ -402,7 +404,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/components/schemas/SingleCustomer"
+                                            "$ref": "#/components/schemas/Customer"
                                         }
                                     }
                                 }
@@ -451,7 +453,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/components/schemas/SingleCustomer"
+                                            "$ref": "#/components/schemas/Customer"
                                         }
                                     }
                                 }
@@ -515,7 +517,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/SinglePaymentMethod"
+                                                "$ref": "#/components/schemas/PaymentMethod"
                                             }
                                         }
                                     }
@@ -558,7 +560,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/components/schemas/SinglePaymentMethod"
+                                            "$ref": "#/components/schemas/PaymentMethod"
                                         }
                                     }
                                 }
@@ -601,7 +603,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/components/schemas/SinglePaymentMethod"
+                                            "$ref": "#/components/schemas/PaymentMethod"
                                         }
                                     }
                                 }
@@ -650,7 +652,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/components/schemas/SinglePaymentMethod"
+                                            "$ref": "#/components/schemas/PaymentMethod"
                                         }
                                     }
                                 }
@@ -715,7 +717,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/SinglePermission"
+                                                "$ref": "#/components/schemas/Permission"
                                             }
                                         }
                                     }
@@ -759,7 +761,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/components/schemas/SinglePermission"
+                                            "$ref": "#/components/schemas/Permission"
                                         }
                                     }
                                 }
@@ -802,7 +804,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/components/schemas/SinglePermission"
+                                            "$ref": "#/components/schemas/Permission"
                                         }
                                     }
                                 }
@@ -852,7 +854,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/components/schemas/SinglePermission"
+                                            "$ref": "#/components/schemas/Permission"
                                         }
                                     }
                                 }
@@ -914,7 +916,10 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/components/schemas/ProductCategories"
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/ProductCategory"
+                                            }
                                         }
                                     }
                                 }
@@ -999,7 +1004,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/components/schemas/ProductCategory"
+                                            "$ref": "#/components/schemas/DetailedProductCategory"
                                         }
                                     }
                                 }
@@ -1086,6 +1091,502 @@
                     "403": { "description": "Forbidden" }
                 }
             }
+        },
+        "/stores/{store}/products": {
+            "get": {
+                "tags": ["Product"],
+                "summary": "Get all products",
+                "description": "Retrieve products list in a store",
+                "parameters": [
+                    {
+                        "name": "store",
+                        "in": "path",
+                        "description": "ID of a store",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Product"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": { "description": "Unauthorized" }
+                }
+            },
+            "post": {
+                "tags": ["Product"],
+                "summary": "Create new product",
+                "description": "Add a single product for a store",
+                "parameters": [
+                    {
+                        "name": "store",
+                        "in": "path",
+                        "description": "ID of a store",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateProduct"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Product"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": { "description": "Unauthorized" },
+                    "403": { "description": "Forbidden" },
+                    "422": { "description": "Validation exception" }
+                }
+            }
+        },
+        "/stores/{store}/products/{product}": {
+            "get": {
+                "tags": ["Product"],
+                "summary": "Get a single product",
+                "description": "Retrieve a product with more detailed information",
+                "parameters": [
+                    {
+                        "name": "store",
+                        "in": "path",
+                        "description": "ID of a store",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    },
+                    {
+                        "name": "product",
+                        "in": "path",
+                        "description": "ID of a product",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/DetailedProduct"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": { "description": "Unauthorized" }
+                }
+            },
+            "put": {
+                "tags": ["Product"],
+                "summary": "Update a product",
+                "description": "Update an existing product of a store",
+                "parameters": [
+                    {
+                        "name": "store",
+                        "in": "path",
+                        "description": "ID of a store",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    },
+                    {
+                        "name": "product",
+                        "in": "path",
+                        "description": "ID of a product",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateProduct"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Product"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": { "description": "Unauthorized" },
+                    "403": { "description": "Forbidden" },
+                    "422": { "description": "Validation exception" }
+                }
+            },
+            "delete": {
+                "tags": ["Product"],
+                "summary": "Delete a product",
+                "description": "Remove a product",
+                "parameters": [
+                    {
+                        "name": "store",
+                        "in": "path",
+                        "description": "ID of a store",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    },
+                    {
+                        "name": "product",
+                        "in": "path",
+                        "description": "ID of a product",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "responses": {
+                    "204": { "description": "Successful operation" },
+                    "401": { "description": "Unauthorized" },
+                    "403": { "description": "Forbidden" }
+                }
+            }
+        },
+        "/stores/{store}/orders": {
+            "get": {
+                "tags": ["Order"],
+                "summary": "Get all orders",
+                "description": "Retrieve all orders on a store",
+                "parameters": [
+                    {
+                        "name": "store",
+                        "in": "path",
+                        "description": "ID of a store",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Order"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": { "description": "Unauthorized" },
+                    "403": { "description": "Forbidden" }
+                }
+            },
+            "post": {
+                "tags": ["Order"],
+                "summary": "Make new order",
+                "description": "Create a new order on a store",
+                "parameters": [
+                    {
+                        "name": "store",
+                        "in": "path",
+                        "description": "ID of a store",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateOrder"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Order"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": { "description": "Unauthorized" },
+                    "403": { "description": "Forbidden" },
+                    "422": { "description": "Validation exception" }
+                }
+            }
+        },
+        "/stores/{store}/orders/{order}": {
+            "get": {
+                "tags": ["Order"],
+                "summary": "Get single order",
+                "description": "Retrieve an order with more detailed information",
+                "parameters": [
+                    {
+                        "name": "store",
+                        "in": "path",
+                        "description": "ID of a store",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    },
+                    {
+                        "name": "order",
+                        "in": "path",
+                        "description": "ID of an order",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/DetailedOrder"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": { "description": "Unauthorized" },
+                    "403": { "description": "Forbidden" }
+                }
+            },
+            "put": {
+                "tags": ["Order"],
+                "summary": "Update order data",
+                "description": "Modify the order data (i.e. note, payment method, cash amount, order type, status, table number and customer)",
+                "parameters": [
+                    {
+                        "name": "store",
+                        "in": "path",
+                        "description": "ID of a store",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    },
+                    {
+                        "name": "order",
+                        "in": "path",
+                        "description": "ID of an order",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateOrder"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Order"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": { "description": "Unauthorized" },
+                    "403": { "description": "Forbidden" },
+                    "422": { "description": "Validation exception" }
+                }
+            },
+            "delete": {
+                "tags": ["Order"],
+                "summary": "Delete an order",
+                "description": "Mark an order as deleted state. It won't be removed from the database. And absolutely, you can access or even recover this kind of order.",
+                "parameters": [
+                    {
+                        "name": "store",
+                        "in": "path",
+                        "description": "ID of a store",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    },
+                    {
+                        "name": "order",
+                        "in": "path",
+                        "description": "ID of an order",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "responses": {
+                    "204": { "description": "Successful operation" },
+                    "401": { "description": "Unauthorized" },
+                    "403": { "description": "Forbidden" }
+                }
+            }
+        },
+        "/stores/{store}/orders/{order}/split": {
+            "post": {
+                "tags": ["Order"],
+                "summary": "Split an order",
+                "description": "Split an existing order to a separate order.",
+                "parameters": [
+                    {
+                        "name": "store",
+                        "in": "path",
+                        "description": "ID of a store",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    },
+                    {
+                        "name": "order",
+                        "in": "path",
+                        "description": "ID of an order",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SplitOrder"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Order"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": { "description": "Unauthorized" },
+                    "403": { "description": "Forbidden" },
+                    "422": { "description": "Validation exception" }
+                }
+            }
+        },
+        "/stores/{store}/orders/{order}/pay": {
+            "patch": {
+                "tags": ["Order"],
+                "summary": "Pay an order",
+                "description": "Pay an order with billed status.",
+                "parameters": [
+                    {
+                        "name": "store",
+                        "in": "path",
+                        "description": "ID of a store",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    },
+                    {
+                        "name": "order",
+                        "in": "path",
+                        "description": "ID of an order",
+                        "required": true,
+                        "schema": { "type": "integer" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Order"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": { "description": "Unauthorized" },
+                    "403": { "description": "Forbidden" },
+                    "422": { "description": "Validation exception" }
+                }
+            }
         }
     },
     "components": {
@@ -1139,7 +1640,7 @@
                     }
                 }
             },
-            "SingleStore": {
+            "BaseStore": {
                 "type": "object",
                 "properties": {
                     "id": { "type": "integer", "example": 1 },
@@ -1153,27 +1654,72 @@
                     }
                 }
             },
-            "SingleUser": {
+            "Store": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseStore"
+                    }
+                ]
+            },
+            "DetailedStore": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseStore"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "owner": {
+                                "$ref": "#/components/schemas/BaseUser"
+                            },
+                            "products": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/BaseProduct"
+                                }
+                            },
+                            "productCategories": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/BaseProductCategory"
+                                }
+                            },
+                            "paymentMethods": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/BasePaymentMethod"
+                                }
+                            },
+                            "totalEmployees": {
+                                "type": "integer",
+                                "example": 10
+                            },
+                            "totalCustomers": {
+                                "type": "integer",
+                                "example": 100
+                            }
+                        }
+                    }
+                ]
+            },
+
+            "BaseUser": {
                 "type": "object",
                 "properties": {
                     "id": { "type": "integer", "example": 1 },
                     "fullName": { "type": "string", "example": "John Doe" }
                 }
             },
-            "InviteEmployee": {
-                "type": "object",
-                "required": ["userIds"],
-                "properties": {
-                    "userIds": {
-                        "type": "array",
-                        "items": { "type": "integer" },
-                        "example": [1, 2, 3]
-                    }
-                }
-            },
-            "SingleUserWithSensitiveData": {
+            "User": {
                 "allOf": [
-                    { "$ref": "#/components/schemas/SingleUser" },
+                    {
+                        "$ref": "#/components/schemas/BaseUser"
+                    }
+                ]
+            },
+            "DetailedUser": {
+                "allOf": [
+                    { "$ref": "#/components/schemas/BaseUser" },
                     {
                         "type": "object",
                         "properties": {
@@ -1197,20 +1743,51 @@
                     }
                 ]
             },
-            "SingleEmployee": {
+
+            "InviteEmployee": {
+                "type": "object",
+                "required": ["userIds"],
+                "properties": {
+                    "userIds": {
+                        "type": "array",
+                        "items": { "type": "integer" },
+                        "example": [1, 2, 3]
+                    }
+                }
+            },
+            "BaseEmployee": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": ["Active", "Inactive"]
+                    }
+                }
+            },
+            "Employee": {
+                "allOf": [{ "$ref": "#/components/schemas/BaseEmployee" }]
+            },
+            "DetailedEmployee": {
                 "allOf": [
-                    { "$ref": "#/components/schemas/SingleUser" },
+                    { "$ref": "#/components/schemas/BaseEmployee" },
                     {
                         "type": "object",
                         "properties": {
-                            "status": {
-                                "type": "string",
-                                "example": "Inactive"
+                            "user": {
+                                "$ref": "#/components/schemas/BaseUser"
+                            },
+                            "store": {
+                                "$ref": "#/components/schemas/BaseStore"
                             }
                         }
                     }
                 ]
             },
+
             "CreateCustomer": {
                 "type": "object",
                 "required": ["name", "phone", "email", "gender"],
@@ -1254,7 +1831,7 @@
                     }
                 }
             },
-            "SingleCustomer": {
+            "BaseCustomer": {
                 "type": "object",
                 "properties": {
                     "id": {
@@ -1291,6 +1868,29 @@
                     }
                 }
             },
+            "Customer": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseCustomer"
+                    }
+                ]
+            },
+            "DetailedCustomer": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseCustomer"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "store": {
+                                "$ref": "#/components/schemas/BaseStore"
+                            }
+                        }
+                    }
+                ]
+            },
+
             "CreatePaymentMethod": {
                 "type": "object",
                 "required": ["name", "destination"],
@@ -1322,7 +1922,7 @@
                     }
                 }
             },
-            "SinglePaymentMethod": {
+            "BasePaymentMethod": {
                 "type": "object",
                 "properties": {
                     "id": { "type": "integer", "example": 1 },
@@ -1330,6 +1930,29 @@
                     "destination": { "type": "string", "example": "1234567890" }
                 }
             },
+            "PaymentMethod": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BasePaymentMethod"
+                    }
+                ]
+            },
+            "DetailedPaymentMethod": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BasePaymentMethod"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "store": {
+                                "$ref": "#/components/schemas/BaseStore"
+                            }
+                        }
+                    }
+                ]
+            },
+
             "CreatePermission": {
                 "type": "object",
                 "required": ["authorizationCode", "refund", "modifyBill"],
@@ -1371,7 +1994,7 @@
                     }
                 }
             },
-            "SinglePermission": {
+            "BasePermission": {
                 "type": "object",
                 "properties": {
                     "id": { "type": "integer", "example": 1 },
@@ -1383,13 +2006,30 @@
                     "modifyBill": { "type": "boolean", "example": true }
                 }
             },
+            "Permission": {
+                "allOf": [{ "$ref": "#/components/schemas/BasePermission" }]
+            },
+            "DetailedPermission": {
+                "allOf": [
+                    { "$ref": "#/components/schemas/BasePermission" },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "store": {
+                                "$ref": "#/components/schemas/BaseStore"
+                            }
+                        }
+                    }
+                ]
+            },
+
             "CreateProductCategory": {
                 "type": "object",
                 "required": ["name", "productIds"],
                 "properties": {
                     "name": {
                         "type": "string",
-                        "maxLength": 255,
+                        "maxLength": 50,
                         "example": "Beverages"
                     },
                     "productIds": {
@@ -1403,37 +2043,169 @@
             },
             "UpdateProductCategory": {
                 "type": "object",
+                "required": ["name", "productIds"],
                 "properties": {
                     "name": {
                         "type": "string",
-                        "maxLength": 255,
+                        "maxLength": 50,
                         "example": "Beverages"
                     },
                     "productIds": {
                         "type": "array",
                         "items": {
-                            "type": "integer"
-                        },
-                        "example": [1, 2, 3]
+                            "type": "integer",
+                            "example": 1
+                        }
                     }
                 }
             },
-            "ProductCategories": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "id": { "type": "integer", "example": 1 },
-                        "name": { "type": "string", "example": "Beverages" },
-                        "products": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "id": { "type": "integer", "example": 1 },
-                                    "name": {
+            "BaseProductCategory": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Beverages"
+                    },
+                    "productsCount": {
+                        "type": "integer",
+                        "example": 10
+                    }
+                }
+            },
+            "ProductCategory": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseProductCategory"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "productsCount": {
+                                "type": "integer",
+                                "example": 5
+                            }
+                        }
+                    }
+                ]
+            },
+            "DetailedProductCategory": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseProductCategory"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "products": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/BaseProduct"
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+
+            "CreateProduct": {
+                "type": "object",
+                "required": ["name", "availableVariants"],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "Iced Tea"
+                    },
+                    "availableModifiers": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["categoryName", "values"],
+                            "properties": {
+                                "categoryName": {
+                                    "type": "string",
+                                    "maxLength": 255,
+                                    "example": "Sugar Level"
+                                },
+                                "values": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "required": ["name"],
+                                        "properties": {
+                                            "name": {
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "Low Sugar"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "availableOptions": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["categoryName", "values"],
+                            "properties": {
+                                "categoryName": {
+                                    "type": "string",
+                                    "maxLength": 255,
+                                    "example": "Size"
+                                },
+                                "values": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "required": ["name"],
+                                        "properties": {
+                                            "name": {
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "L"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "availableVariants": {
+                        "type": "array",
+                        "description": "Array length should be equals to the total possible combination of available option on each category. But if available options is not defined, the length should be 1.",
+                        "items": {
+                            "type": "object",
+                            "required": ["stock", "price"],
+                            "properties": {
+                                "stock": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 999999,
+                                    "example": 100
+                                },
+                                "price": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 99999999,
+                                    "example": 5000
+                                },
+                                "sku": {
+                                    "type": "string",
+                                    "maxLength": 255,
+                                    "example": "BVG001"
+                                },
+                                "options": {
+                                    "type": "array",
+                                    "items": {
                                         "type": "string",
-                                        "example": "White Coffee"
+                                        "description": "Should match the available option value",
+                                        "example": "L"
                                     }
                                 }
                             }
@@ -1441,27 +2213,515 @@
                     }
                 }
             },
-            "ProductCategory": {
+            "UpdateProduct": {
                 "type": "object",
+                "required": ["name", "availableVariants"],
                 "properties": {
-                    "id": { "type": "integer", "example": 1 },
-                    "name": { "type": "string", "example": "Beverages" },
-                    "products": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "Iced Tea"
+                    },
+                    "availableModifiers": {
                         "type": "array",
                         "items": {
                             "type": "object",
+                            "required": ["categoryName", "values"],
                             "properties": {
-                                "id": { "type": "integer", "example": 1 },
-                                "name": {
+                                "categoryName": {
                                     "type": "string",
-                                    "example": "White Coffee"
+                                    "maxLength": 255,
+                                    "example": "Sugar Level"
                                 },
-                                "totalVariants": {
-                                    "type": "integer",
-                                    "example": 5
+                                "values": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "required": ["name"],
+                                        "properties": {
+                                            "name": {
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "Low Sugar"
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
+                    },
+                    "availableOptions": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["categoryName", "values"],
+                            "properties": {
+                                "categoryName": {
+                                    "type": "string",
+                                    "maxLength": 255,
+                                    "example": "Size"
+                                },
+                                "values": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "required": ["name"],
+                                        "properties": {
+                                            "name": {
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "L"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "availableVariants": {
+                        "type": "array",
+                        "description": "Array length should be equals to the total possible combination of available option on each category. But if available options is not defined, the length should be 1.",
+                        "items": {
+                            "type": "object",
+                            "required": ["stock", "price"],
+                            "properties": {
+                                "stock": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 999999,
+                                    "example": 100
+                                },
+                                "price": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 99999999,
+                                    "example": 5000
+                                },
+                                "sku": {
+                                    "type": "string",
+                                    "maxLength": 255,
+                                    "example": "BVG001"
+                                },
+                                "options": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "description": "Should match the available option value",
+                                        "example": "L"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "BaseProduct": {
+                "type": "object",
+                "properties": {
+                    "id": { "type": "integer", "example": 1 },
+                    "name": { "type": "string", "example": "Iced Tea" }
+                }
+            },
+            "Product": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseProduct"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "availableModifiers": {
+                                "type": "array",
+                                "items": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/BaseProductModifierCategory"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "values": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/BaseProductModifier"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "availableOptions": {
+                                "type": "array",
+                                "items": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/BaseProductOptionCategory"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "values": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/BaseProductOption"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "availableVariants": {
+                                "type": "array",
+                                "items": {                                    
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/BaseProductVariant"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "productOptions":{
+                                                    "type": "array",
+                                                    "items":{
+                                                        "$ref": "#/components/schemas/BaseProductOption"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "DetailedProduct": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Product"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "category": {
+                                "$ref": "#/components/schemas/BaseProductCategory"
+                            }
+                        }
+                    }
+                ]
+            },
+
+            "CreateOrder": {
+                "type": "object",
+                "required": [
+                    "cashAmount",
+                    "orderType",
+                    "status",
+                    "paymentMethodId",
+                    "orderedProducts"
+                ],
+                "properties": {
+                    "cashAmount": {
+                        "type": "integer",
+                        "example": 10000
+                    },
+                    "note": {
+                        "type": "string",
+                        "example": "Add extra sugar"
+                    },
+                    "orderType": {
+                        "type": "string",
+                        "enum": ["Dine In", "Take Away"]
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": ["Paid", "Billed"]
+                    },
+                    "tableNumber": {
+                        "type": "string",
+                        "example": "T992"
+                    },
+                    "customerId": { "type": "integer", "example": 1 },
+                    "paymentMethodId": { "type": "integer", "example": 1 },
+                    "orderedProducts": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["variantId", "modifierIds"],
+                            "properties": {
+                                "variantId": {
+                                    "type": "integer",
+                                    "example": 1
+                                },
+                                "modifierIds": {
+                                    "type": "array",
+                                    "items": { "type": "integer", "example": 1 }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "UpdateOrder": {
+                "type": "object",
+                "required": [
+                    "cashAmount",
+                    "orderType",
+                    "status",
+                    "paymentMethodId",
+                    "orderedProducts"
+                ],
+                "properties": {
+                    "cashAmount": {
+                        "type": "integer",
+                        "example": 10000
+                    },
+                    "note": {
+                        "type": "string",
+                        "example": "Add extra sugar"
+                    },
+                    "orderType": {
+                        "type": "string",
+                        "enum": ["Dine In", "Take Away"]
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": ["Paid", "Billed"]
+                    },
+                    "tableNumber": {
+                        "type": "string",
+                        "example": "T992"
+                    },
+                    "customerId": { "type": "integer", "example": 1 },
+                    "paymentMethodId": { "type": "integer", "example": 1 },
+                    "orderedProducts": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["variantId", "modifierIds"],
+                            "properties": {
+                                "variantId": {
+                                    "type": "integer",
+                                    "example": 1
+                                },
+                                "modifierIds": {
+                                    "type": "array",
+                                    "items": { "type": "integer", "example": 1 }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "SplitOrder": {
+                "type": "object",
+                "properties": {
+                    "orderedProducts": {
+                        "type": "array",
+                        "items": { "type": "integer", "example": 1 }
+                    }
+                }
+            },
+            "BaseOrder": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "cashAmount": {
+                        "type": "integer",
+                        "example": 10000
+                    },
+                    "note": {
+                        "type": "string",
+                        "example": "Add extra sugar"
+                    },
+                    "orderType": {
+                        "type": "string",
+                        "enum": ["Dine In", "Take Away"]
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": ["Paid", "Billed"]
+                    },
+                    "tableNumber": {
+                        "type": "string",
+                        "example": "T992"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "example": "2024-12-03 22:10:06"
+                    }
+                }
+            },
+            "Order": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseOrder"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "orderedProducts": {
+                                "type": "array",
+                                "items": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/BaseOrderProductVariant"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "product": {
+                                                    "$ref": "#/components/schemas/BaseProduct"
+                                                },
+                                                "variant": {
+                                                    "allOf": [
+                                                        {
+                                                            "$ref": "#/components/schemas/BaseProductVariant"
+                                                        },
+                                                        {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "productOptions":{
+                                                                    "type": "array",
+                                                                    "items":{
+                                                                        "$ref": "#/components/schemas/BaseProductOption"
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                "selectedModifiers": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/BaseProductModifier"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "DetailedOrder": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Order"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "customer": {
+                                "$ref": "#/components/schemas/BaseCustomer"
+                            },
+                            "paymentMethod": {
+                                "$ref": "#/components/schemas/BasePaymentMethod"
+                            },
+                            "servicedBy": {
+                                "$ref": "#/components/schemas/BaseUser"
+                            }
+                        }
+                    }
+                ]
+            },
+
+            "BaseProductOptionCategory": {
+                "type": "object",
+                "properties": {
+                    "id": { "type": "integer", "example": 1 },
+                    "name": { "type": "string", "example": "Size" },
+                    "status": {
+                        "type": "string",
+                        "enum": ["Active", "Inactive"]
+                    }
+                }
+            },
+            "BaseProductOption": {
+                "type": "object",
+                "properties": {
+                    "id": { "type": "integer", "example": 1 },
+                    "name": { "type": "string", "example": "XL" },
+                    "status": {
+                        "type": "string",
+                        "enum": ["Active", "Inactive"]
+                    }
+                }
+            },
+            "BaseProductModifierCategory": {
+                "type": "object",
+                "properties": {
+                    "id": { "type": "integer", "example": 1 },
+                    "name": { "type": "string", "example": "Sugar Level" },
+                    "status": {
+                        "type": "string",
+                        "enum": ["Active", "Inactive"]
+                    }
+                }
+            },
+            "BaseProductModifier": {
+                "type": "object",
+                "properties": {
+                    "id": { "type": "integer", "example": 1 },
+                    "name": { "type": "string", "example": "Low Sugar" },
+                    "status": {
+                        "type": "string",
+                        "enum": ["Active", "Inactive"]
+                    }
+                }
+            },
+            "BaseProductVariant": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "price": {
+                        "type": "integer",
+                        "example": 5000
+                    },
+                    "stock": {
+                        "type": "integer",
+                        "example": 100
+                    },
+                    "sku": {
+                        "type": "string",
+                        "example": "BVG001"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": ["Active", "Inactive"]
+                    }
+                }
+            },
+            "BaseOrderProductVariant": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "isCanceled": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "cancelReason": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": null
+                    },
+                    "canceledAt": {
+                        "type": "string",
+                        "nullable": true,
+                        "example": "2024-12-03 22:10:06"
                     }
                 }
             }

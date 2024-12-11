@@ -16,13 +16,16 @@ class ProductVariant extends Model
         'price',
         'sku',
         'stock',
+        'status'
     ];
 
-    protected $attributes = ['stock' => -1];
+    protected $attributes = [
+        'status' => 'Active'
+    ];
 
     public $timestamps = false;
 
-    public function orderProductVariant(): HasMany
+    public function orderProductVariants(): HasMany
     {
         return $this->hasMany(OrderProductVariant::class);
     }
