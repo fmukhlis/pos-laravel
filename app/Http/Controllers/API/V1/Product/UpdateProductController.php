@@ -54,15 +54,19 @@ class UpdateProductController extends Controller
                             $availableModifier['category_name']
                         )
                     ]);
+                $productModifierCategory->status = 'Active';
+                $productModifierCategory->save();
 
                 foreach ($availableModifier['values'] as $value) {
-                    $productModifierCategory
+                    $productModifier = $productModifierCategory
                         ->productModifiers()
                         ->firstOrCreate([
                             'name' => Str::title(
                                 $value['name']
                             )
                         ]);
+                    $productModifier->status = 'Active';
+                    $productModifier->save();
                 }
             }
 
@@ -80,6 +84,9 @@ class UpdateProductController extends Controller
                 ->get()
                 ->each(function ($productModifierCategory) {
                     $productModifierCategory->update([
+                        'status' => 'Inactive'
+                    ]);
+                    $productModifierCategory->productModifiers()->update([
                         'status' => 'Inactive'
                     ]);
                 });
@@ -116,15 +123,19 @@ class UpdateProductController extends Controller
                             $availableOption['category_name']
                         )
                     ]);
+                $productOptionCategory->status = 'Active';
+                $productOptionCategory->save();
 
                 foreach ($availableOption['values'] as $value) {
-                    $productOptionCategory
+                    $productOption = $productOptionCategory
                         ->productOptions()
                         ->firstOrCreate([
                             'name' => Str::title(
                                 $value['name']
                             )
                         ]);
+                    $productOption->status = 'Active';
+                    $productOption->save();
                 }
             }
 
@@ -142,6 +153,9 @@ class UpdateProductController extends Controller
                 ->get()
                 ->each(function ($productOptionCategory) {
                     $productOptionCategory->update([
+                        'status' => 'Inactive'
+                    ]);
+                    $productOptionCategory->productOptions()->update([
                         'status' => 'Inactive'
                     ]);
                 });
@@ -177,6 +191,8 @@ class UpdateProductController extends Controller
                     'stock' => $availableVariant['stock'],
                     'sku' => $availableVariant['sku']
                 ]);
+            $productVariant->status = 'Active';
+            $productVariant->save();
 
             if (isset($availableVariant['options'])) {
                 $productOptions = ProductOption::whereIn(

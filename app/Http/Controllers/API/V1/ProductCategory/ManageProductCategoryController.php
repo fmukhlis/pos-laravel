@@ -18,7 +18,7 @@ class ManageProductCategoryController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'product_ids' => ['required', 'array'],
-            'product_ids.*' => ['integer', 'exists:products,id']
+            'product_ids.*' => ['exists:products,id']
         ]);
 
         $productCategory = $store
@@ -54,8 +54,7 @@ class ManageProductCategoryController extends Controller
         $products = collect($validated['product_ids'])
             ->map(fn($productId) => (
                 Product::find($productId)
-            ))
-            ->all();
+            ));
 
         $productCategory
             ->products
